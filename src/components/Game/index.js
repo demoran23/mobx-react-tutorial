@@ -27,14 +27,15 @@ export default class Game extends React.Component {
         const stepNumber = this.state.history.length;
 
         squares[i] = this.state.playerToken;
-
+        let winInfo = this.calculateWinInfo(squares);
         this.setState({
             history: this.state.history.concat([{
                 squares: squares
             }]),
             stepNumber: stepNumber,
             playerToken: this.state.playerToken === 'X' ? 'O' : 'X',
-            winner: this.calculateWinner(squares)
+            winner: winInfo.winner,
+            winningSquares: winInfo.winningSquares
         });
     }
 
@@ -45,7 +46,7 @@ export default class Game extends React.Component {
         });
     }
 
-    calculateWinner(squares) {
+    calculateWinInfo(squares) {
         const lines = [
             [0, 1, 2],
             [3, 4, 5],
@@ -60,11 +61,14 @@ export default class Game extends React.Component {
         for (let i = 0; i < lines.length; i++) {
             const [a, b, c] = lines[i];
             if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-                return squares[a];
-            }
+                return {
+                    winner: squares[a],
+                    winningSquares : [ a, b, c ]
+                };
+            };
         }
 
-        return null;
+        return {winner: null, winningSquares: null};
     }
 
     render() {
@@ -102,6 +106,7 @@ export default class Game extends React.Component {
                     <Board squares={current}
                            playerToken={this.state.playerToken}
                            winner={this.state.winner}
+                           winningSquares={this.state.winningSquares}
                            onClick={(i) => this.handleClick(i)}/>
                 </div>
                 <div className="game-info">

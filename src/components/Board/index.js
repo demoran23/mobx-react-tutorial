@@ -3,7 +3,15 @@ import Square from '../Square'
 
 export default class Board extends React.Component {
     renderSquare(i) {
-        return <Square value={this.props.squares[i]} onClick={() => this.props.onClick(i)} />
+        let winner;
+
+        if (this.props.winningSquares) {
+            winner = this.props.winningSquares.indexOf(i) !== -1;
+        }
+
+        return <Square value={this.props.squares[i]}
+                       onClick={() => this.props.onClick(i)}
+                       winner={winner} />
     }
     renderRow(i){
         let squareBaseline = i * 3; // 3 squares per row, starting with a zero index
