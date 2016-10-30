@@ -1,6 +1,7 @@
 import React from 'react';
 import Board from '../Board'
 import {observer} from 'mobx-react';
+
 const Game = observer(class Game extends React.Component {
     constructor({store}) {
         super();
@@ -33,11 +34,6 @@ const Game = observer(class Game extends React.Component {
         this.store.addNewSquares({squares});
     }
 
-    jumpTo(step) {
-        console.log(`Jumping to step ${step}!`);
-        this.store.stepNumber = step;
-    }
-
     render() {
         console.log('Rendering Game!')
         let moves = this.store.history.map((step, move) => {
@@ -50,13 +46,13 @@ const Game = observer(class Game extends React.Component {
             if (isCurrentStep)
                 return (
                     <li key={move}>
-                        <a href="#" onClick={() => this.jumpTo(move)}><b>{desc}</b></a>
+                        <a href="#" onClick={() => this.store.stepNumber = move}><b>{desc}</b></a>
                     </li>
                 );
 
             return (
                 <li key={move}>
-                    <a href="#" onClick={() => this.jumpTo(move)}>{desc}</a>
+                    <a href="#" onClick={() => this.store.stepNumber = move}>{desc}</a>
                 </li>
             );
 
