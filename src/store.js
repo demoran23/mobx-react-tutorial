@@ -1,16 +1,21 @@
-import {extendObservable} from "mobx";
+import {extendObservable, observable} from "mobx";
 export class Store {
     constructor() {
         extendObservable(this, {
+            history: [{
+                squares: observable(Array(9).fill(null))
+            }],
             playerToken: 'X',
+            winner: null,
             stepNumber: 0,
+            sortMovesDescending: false
         });
     }
-    // history;
+    history;
     playerToken;
-    // winner;
+    winner;
     stepNumber;
-    // sortMovesDescending;
+    sortMovesDescending;
 
     incrementStepNumber(){
         console.log("Incrementing!")
