@@ -1,7 +1,7 @@
 import React from 'react';
 import Board from '../Board'
 export default class Game extends React.Component {
-    constructor(){
+    constructor() {
         super();
         this.state = {
             history: [{
@@ -13,7 +13,7 @@ export default class Game extends React.Component {
         };
     }
 
-    handleClick(i){
+    handleClick(i) {
         const history = this.state.history;
         const current = history[this.state.stepNumber];
         const squares = current.squares.slice();
@@ -71,11 +71,22 @@ export default class Game extends React.Component {
             const desc = move ?
             'Move #' + move :
                 'Game start';
+
+            let isCurrentStep = move === this.state.stepNumber;
+
+            if (isCurrentStep)
+                return (
+                    <li key={move}>
+                        <a href="#" onClick={() => this.jumpTo(move)}><b>{desc}</b></a>
+                    </li>
+                );
+
             return (
                 <li key={move}>
                     <a href="#" onClick={() => this.jumpTo(move)}>{desc}</a>
                 </li>
             );
+
         });
 
         const current = this.state.history[this.state.stepNumber].squares;
@@ -87,7 +98,7 @@ export default class Game extends React.Component {
                     <Board squares={current}
                            playerToken={this.state.playerToken}
                            winner={this.state.winner}
-                           onClick={(i) => this.handleClick(i)} />
+                           onClick={(i) => this.handleClick(i)}/>
                 </div>
                 <div className="game-info">
                     <div>{/* status */}</div>
