@@ -1,15 +1,10 @@
 import {extendObservable, observable} from "mobx";
 export class Store {
     constructor() {
-        extendObservable(this, {
-            history: [{
-                squares: observable(Array(9).fill(null))
-            }],
-            stepNumber: 0,
-            sortMovesDescending: false
-        });
+        extendObservable(this, this);
     }
-    history;
+
+    history = [{ squares: Array(9).fill(null) }];
 
     get playerToken() {
         return (this.stepNumber % 2) ? 'X' : 'O';
@@ -41,19 +36,32 @@ export class Store {
         return this.history[this.stepNumber].squares;
     };
 
-    addNewSquares(squares) {
-        console.log('Adding new squares');
-        if (!this.isMostRecentStep){
-            console.error('Attempt to add new squares aborted.')
+    addMoveAtSquare(i) {
+        const squares = this.currentSquares.slice();
+
+        if (this.winner != null ) {
+            console.warn('The game has already been won!');
             return;
         }
 
-        this.history.push(squares);
+        if (!this.isMostRecentStep){
+            console.warn("Cannot change a square when in an old board state.");
+            return;
+        }
+
+        // If someone has already won the game or played in this square, ignore the click
+        if (squares[i] != null) {
+            console.warn('Cannot change a square with a value already.');
+            return;
+        }
+
+        squares[i] = this.playerToken;
+        this.history.push({squares});
         this.stepNumber++;
     }
 
-    stepNumber;
-    sortMovesDescending;
+    stepNumber = 0;
+    sortMovesDescending = false;
 
     incrementStepNumber(){
         console.log("Incrementing!")

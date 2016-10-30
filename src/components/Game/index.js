@@ -11,27 +11,7 @@ const Game = observer(class Game extends React.Component {
     store;
     
     handleClick(i) {
-        console.log(`Square ${i} has been clicked!`);
-        const squares = this.store.currentSquares.slice();
-
-        if (this.store.winner != null ) {
-            console.warn('The game has already been won!');
-            return;
-        }
-
-        if (this.store.stepNumber !== this.store.history.length - 1){
-            console.warn("Cannot change a square when in an old board state.");
-            return;
-        }
-
-        // If someone has already won the game or played in this square, ignore the click
-        if (squares[i] != null) {
-            console.warn('Cannot change a square with a value already.');
-            return;
-        }
-
-        squares[i] = this.store.playerToken;
-        this.store.addNewSquares({squares});
+        this.store.addMoveAtSquare(i);
     }
 
     render() {
@@ -62,13 +42,11 @@ const Game = observer(class Game extends React.Component {
             moves = moves.reverse();
         }
 
-        const current = this.store.currentSquares;
-
         return (
 
             <div className="game">
                 <div className="game-board">
-                    <Board squares={current}
+                    <Board squares={this.store.currentSquares}
                            playerToken={this.store.playerToken}
                            winner={this.store.winner}
                            winningSquares={this.store.winningSquares}
