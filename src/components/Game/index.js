@@ -9,7 +9,8 @@ export default class Game extends React.Component {
             }],
             playerToken: 'X',
             winner: null,
-            stepNumber: 0
+            stepNumber: 0,
+            sortMovesDescending: false
         };
     }
 
@@ -67,7 +68,7 @@ export default class Game extends React.Component {
     }
 
     render() {
-        const moves = this.state.history.map((step, move) => {
+        let moves = this.state.history.map((step, move) => {
             const desc = move ?
             'Move #' + move :
                 'Game start';
@@ -89,6 +90,9 @@ export default class Game extends React.Component {
 
         });
 
+        if (this.state.sortMovesDescending){
+            moves = moves.reverse();
+        }
         const current = this.state.history[this.state.stepNumber].squares;
 
         return (
@@ -102,6 +106,9 @@ export default class Game extends React.Component {
                 </div>
                 <div className="game-info">
                     <div>{/* status */}</div>
+                    <button onClick={() => this.setState({ sortMovesDescending : !this.state.sortMovesDescending})}>
+                        Toggle sort order
+                    </button>
                     <ol>{moves}</ol>
                 </div>
             </div>
