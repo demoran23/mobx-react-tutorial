@@ -10,57 +10,32 @@ const Game = observer(class Game extends React.Component {
     store;
     
     handleClick(i) {
-        console.warn('Click!');
-        const history = this.store.history;
-        const current = history[this.store.stepNumber];
-        const squares = current.squares.slice();
+        console.log(`Square ${i} has been clicked!`);
+        const squares = this.store.currentSquares.slice();
 
-        // If someone has already won the game or played in this square, ignore the click
-        if (this.store.winner != null || squares[i] != null) {
-            console.log('Nothing has changed, aborting click.');
+        if (this.store.winner != null ) {
+            console.warn('The game has already been won!');
             return;
         }
 
-        const stepNumber = this.store.history.length;
+        if (this.store.stepNumber !== this.store.history.length - 1){
+            console.warn("Cannot change a square when in an old board state.");
+            return;
+        }
+
+        // If someone has already won the game or played in this square, ignore the click
+        if (squares[i] != null) {
+            console.warn('Cannot change a square with a value already.');
+            return;
+        }
 
         squares[i] = this.store.playerToken;
-        let winInfo = this.calculateWinInfo(squares);
-        this.store.history.push({squares});
-        this.store.stepNumber = stepNumber;
-        this.store.playerToken = this.store.playerToken === 'X' ? 'O' : 'X';
-        this.store.winner = winInfo.winner;
-        this.store.winningSquares = winInfo.winningSquares;
+        this.store.addNewSquares({squares});
     }
 
     jumpTo(step) {
         console.log(`Jumping to step ${step}!`);
         this.store.stepNumber = step;
-        this.store.playerToken = (step % 2) ? 'X' : 'O';
-    }
-
-    calculateWinInfo(squares) {
-        const lines = [
-            [0, 1, 2],
-            [3, 4, 5],
-            [6, 7, 8],
-            [0, 3, 6],
-            [1, 4, 7],
-            [2, 5, 8],
-            [0, 4, 8],
-            [2, 4, 6],
-        ];
-
-        for (let i = 0; i < lines.length; i++) {
-            const [a, b, c] = lines[i];
-            if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-                return {
-                    winner: squares[a],
-                    winningSquares : [ a, b, c ]
-                };
-            };
-        }
-
-        return {winner: null, winningSquares: null};
     }
 
     render() {
@@ -91,7 +66,7 @@ const Game = observer(class Game extends React.Component {
             moves = moves.reverse();
         }
 
-        const current = this.store.history[this.store.stepNumber].squares;
+        const current = this.store.currentSquares;
 
         return (
 
