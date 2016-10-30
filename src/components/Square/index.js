@@ -1,6 +1,7 @@
 import React from 'react';
+import {observer} from 'mobx-react';
 
-export default (props) => {
+export default observer((props) => {
     let classes = "square";
     if (props.winner){
         classes += " winner";
@@ -10,4 +11,4 @@ export default (props) => {
             {props.value}
         </button>
     );
-}
+});

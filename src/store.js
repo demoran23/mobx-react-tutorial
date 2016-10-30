@@ -14,6 +14,9 @@ export class Store {
     history;
     playerToken;
     winner;
+    get current() {
+
+    };
     stepNumber;
     sortMovesDescending;
 

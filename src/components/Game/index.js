@@ -4,15 +4,6 @@ import {observer} from 'mobx-react';
 const Game = observer(class Game extends React.Component {
     constructor({store}) {
         super();
-        // this.state = {
-        //     history: [{
-        //         squares: Array(9).fill(null)
-        //     }],
-        //     playerToken: 'X',
-        //     winner: null,
-        //     stepNumber: 0,
-        //     sortMovesDescending: false
-        // };
         this.store = store;
     }
     
@@ -22,7 +13,7 @@ const Game = observer(class Game extends React.Component {
         console.warn('Click!');
         const history = this.store.history;
         const current = history[this.store.stepNumber];
-        const squares = current.squares;
+        const squares = current.squares.slice();
 
         // If someone has already won the game or played in this square, ignore the click
         if (this.store.winner != null || squares[i] != null) {
@@ -39,24 +30,12 @@ const Game = observer(class Game extends React.Component {
         this.store.playerToken = this.store.playerToken === 'X' ? 'O' : 'X';
         this.store.winner = winInfo.winner;
         this.store.winningSquares = winInfo.winningSquares;
-        // this.setState({
-        //     history: this.store.history.concat([{
-        //         squares: squares
-        //     }]),
-        //     stepNumber: stepNumber,
-        //     playerToken: this.store.playerToken === 'X' ? 'O' : 'X',
-        //     winner: winInfo.winner,
-        //     winningSquares: winInfo.winningSquares
-        // });
     }
 
     jumpTo(step) {
+        console.log(`Jumping to step ${step}!`);
         this.store.stepNumber = step;
         this.store.playerToken = (step % 2) ? 'X' : 'O';
-        // this.setState({
-        //     stepNumber: step,
-        //     playerToken: (step % 2) ? 'X' : 'O',
-        // });
     }
 
     calculateWinInfo(squares) {
@@ -85,6 +64,7 @@ const Game = observer(class Game extends React.Component {
     }
 
     render() {
+        console.log('Rendering Game!')
         let moves = this.store.history.map((step, move) => {
             const desc = move ?
             'Move #' + move :

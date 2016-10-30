@@ -1,7 +1,8 @@
 import React from 'react';
 import Square from '../Square'
+import {observer} from 'mobx-react';
 
-export default class Board extends React.Component {
+const Board = observer(class Board extends React.Component {
     renderSquare(i) {
         let winner;
 
@@ -24,6 +25,7 @@ export default class Board extends React.Component {
             </div>
         )
     }
+
     render() {
         let status;
 
@@ -45,4 +47,6 @@ export default class Board extends React.Component {
         );
     }
 
-}
+});
+
+export default Board;
